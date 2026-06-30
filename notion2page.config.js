@@ -34,6 +34,6 @@ export default {
   },
 
   theme: {
-    accent: "#0f766e"
+    accent: "#6f7772"
   }
 };

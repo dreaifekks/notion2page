@@ -1,5 +1,5 @@
 export function renderFavicon(config) {
-  const accent = config.theme?.accent ?? "#0f766e";
+  const accent = config.theme?.accent ?? "#6f7772";
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <rect width="64" height="64" rx="14" fill="#050505"/>

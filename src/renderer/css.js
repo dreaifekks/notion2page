@@ -1,5 +1,5 @@
 export function renderCss(config) {
-  const accent = config.theme?.accent ?? "#0f766e";
+  const accent = config.theme?.accent ?? "#6f7772";
 
   return `:root {
   color-scheme: dark;

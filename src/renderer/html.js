@@ -173,7 +173,7 @@ function summarizeContent(content) {
 }
 
 function generatedBackgroundStyle(colors = []) {
-  const [first = "#111827", second = "#0f766e", third = "#020617"] = colors;
+  const [first = "#111827", second = "#374151", third = "#020617"] = colors;
   return ` style="--cover-a: ${escapeAttribute(first)}; --cover-b: ${escapeAttribute(second)}; --cover-c: ${escapeAttribute(third)}"`;
 }
 
