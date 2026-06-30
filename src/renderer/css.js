@@ -2,16 +2,16 @@ export function renderCss(config) {
   const accent = config.theme?.accent ?? "#0f766e";
 
   return `:root {
-  color-scheme: light;
-  --bg: #f6f7f4;
-  --surface: #ffffff;
-  --surface-muted: #eef2ee;
-  --text: #18211f;
-  --muted: #61706b;
-  --line: #d8dfd9;
+  color-scheme: dark;
+  --bg: #050505;
+  --surface: #101211;
+  --surface-muted: #171a19;
+  --text: #f2f5f3;
+  --muted: #9aa6a1;
+  --line: #242a27;
   --accent: ${accent};
-  --accent-soft: color-mix(in srgb, var(--accent), white 88%);
-  --shadow: 0 14px 28px rgba(24, 33, 31, 0.08);
+  --accent-soft: color-mix(in srgb, var(--accent), black 76%);
+  --shadow: 0 18px 36px rgba(0, 0, 0, 0.36);
 }
 
 * {
@@ -33,7 +33,7 @@ a {
 
 .site-header {
   border-bottom: 1px solid var(--line);
-  background: var(--surface);
+  background: #080908;
 }
 
 .site-header__inner {
@@ -78,7 +78,7 @@ h1 {
   border-radius: 8px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  background: var(--surface-muted);
+  background: #111412;
 }
 
 .site-stats div {
@@ -112,19 +112,21 @@ h1 {
 }
 
 .project-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-  align-items: start;
+  columns: 2 360px;
+  column-gap: 20px;
 }
 
 .project {
   min-width: 0;
+  width: 100%;
+  display: inline-block;
+  margin: 0 0 20px;
   border: 1px solid var(--line);
   border-radius: 8px;
   overflow: hidden;
   background: var(--surface);
-  box-shadow: 0 1px 0 rgba(24, 33, 31, 0.04);
+  box-shadow: var(--shadow);
+  break-inside: avoid;
 }
 
 .project-cover {
@@ -136,12 +138,12 @@ h1 {
   justify-content: space-between;
   padding: 18px;
   overflow: hidden;
-  background: #d8dfd9;
+  background: #111412;
 }
 
 .project-cover--generated {
   background:
-    repeating-linear-gradient(90deg, rgba(255,255,255,0.16) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.06) 0 1px, transparent 1px 18px),
     linear-gradient(135deg, var(--cover-a), var(--cover-b) 54%, var(--cover-c));
 }
 
@@ -156,7 +158,7 @@ h1 {
 .project-cover__shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(12, 18, 17, 0.12), rgba(12, 18, 17, 0.72));
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.82));
 }
 
 .project-cover__content {
@@ -177,8 +179,8 @@ h1 {
   display: inline-grid;
   place-items: center;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--text);
+  background: rgba(10, 12, 11, 0.92);
+  color: #f8faf9;
 }
 
 .project-icon {
@@ -226,20 +228,20 @@ h1 {
   z-index: 1;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin: 0 0 18px;
+  gap: 8px;
+  margin: 14px 0 0 68px;
 }
 
 .tag {
   max-width: 100%;
   min-height: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 6px;
   display: inline-flex;
   align-items: center;
   padding: 3px 8px;
   color: #fff;
-  background: rgba(0, 0, 0, 0.26);
+  background: rgba(0, 0, 0, 0.38);
   font-size: 0.75rem;
   font-weight: 720;
   line-height: 1.2;
@@ -271,7 +273,7 @@ h1 {
   justify-content: center;
   padding: 6px 11px;
   color: var(--text);
-  background: var(--surface);
+  background: #0b0d0c;
   font-size: 0.82rem;
   font-weight: 760;
 }
@@ -280,6 +282,7 @@ h1 {
 .subproject-links a:hover {
   border-color: var(--accent);
   color: var(--accent);
+  background: var(--accent-soft);
 }
 
 .project-content {
@@ -324,7 +327,7 @@ h1 {
   border-radius: 8px;
   overflow-x: auto;
   padding: 12px;
-  background: #17211f;
+  background: #060706;
   color: #f4f7f6;
   font-size: 0.82rem;
   line-height: 1.5;
@@ -391,7 +394,7 @@ h1 {
   gap: 12px;
   align-items: center;
   padding: 10px 0;
-  border-top: 1px solid color-mix(in srgb, var(--line), white 45%);
+  border-top: 1px solid color-mix(in srgb, var(--line), white 8%);
 }
 
 .subproject:first-child {
@@ -460,7 +463,7 @@ h1 {
   }
 
   .project-grid {
-    grid-template-columns: 1fr;
+    columns: 1;
   }
 }
 
@@ -477,6 +480,10 @@ h1 {
   .project-cover {
     min-height: 218px;
     padding: 14px;
+  }
+
+  .tag-row {
+    margin-left: 46px;
   }
 
   .project-cover h2 {

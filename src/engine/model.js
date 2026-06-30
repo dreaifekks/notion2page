@@ -131,11 +131,11 @@ function generatedIcon(name) {
 
 function generatedBackground(seed) {
   const colors = [
-    ["#d7e7e2", "#f3d6c6", "#f7f8fa"],
-    ["#d8e2f3", "#ead7c5", "#f8fafc"],
-    ["#dbe8d2", "#d8dce8", "#f7f8fa"],
-    ["#e4d9ec", "#d5e6e1", "#fbfaf8"],
-    ["#e7dfd2", "#d3e2ea", "#f8fafc"]
+    ["#111827", "#0f766e", "#020617"],
+    ["#18181b", "#7c2d12", "#030712"],
+    ["#0f172a", "#1d4ed8", "#030712"],
+    ["#111827", "#6d28d9", "#020617"],
+    ["#161616", "#365314", "#030712"]
   ];
   const index = hashString(seed) % colors.length;
 

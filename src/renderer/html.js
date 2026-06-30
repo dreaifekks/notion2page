@@ -165,7 +165,7 @@ function summarizeContent(content) {
 }
 
 function generatedBackgroundStyle(colors = []) {
-  const [first = "#d7e7e2", second = "#f3d6c6", third = "#f7f8fa"] = colors;
+  const [first = "#111827", second = "#0f766e", third = "#020617"] = colors;
   return ` style="--cover-a: ${escapeAttribute(first)}; --cover-b: ${escapeAttribute(second)}; --cover-c: ${escapeAttribute(third)}"`;
 }
 
