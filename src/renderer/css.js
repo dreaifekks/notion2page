@@ -18,7 +18,13 @@ export function renderCss(config) {
   box-sizing: border-box;
 }
 
+html {
+  min-height: 100%;
+  background: var(--bg);
+}
+
 body {
+  min-height: 100%;
   margin: 0;
   background: var(--bg);
   color: var(--text);
@@ -72,12 +78,12 @@ h1 {
 }
 
 .site-stats {
-  min-width: 236px;
+  min-width: 118px;
   min-height: 86px;
   border: 1px solid var(--line);
   border-radius: 8px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   background: #111412;
 }
 
@@ -229,7 +235,7 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 14px 0 0 68px;
+  margin: 22px 0 0 68px;
 }
 
 .tag {
@@ -483,7 +489,7 @@ h1 {
   }
 
   .tag-row {
-    margin-left: 46px;
+    margin-left: 0;
   }
 
   .project-cover h2 {

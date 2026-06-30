@@ -1,14 +1,17 @@
 import { escapeHtml, escapeAttribute } from "./utils.js";
 
 export function renderHtml(model, config) {
+  const styleVersion = encodeURIComponent(model.generatedAt);
+
   return `<!doctype html>
 <html lang="${escapeAttribute(config.lang ?? "en")}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
   <title>${escapeHtml(model.title)}</title>
   <meta name="description" content="${escapeAttribute(model.description)}">
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./style.css?v=${styleVersion}">
 </head>
 <body>
   <header class="site-header">
@@ -22,10 +25,6 @@ export function renderHtml(model, config) {
         <div>
           <span>${model.stats.projects}</span>
           <small>projects</small>
-        </div>
-        <div>
-          <span>${model.stats.subprojects}</span>
-          <small>subprojects</small>
         </div>
       </div>
     </div>
