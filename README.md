@@ -52,6 +52,11 @@ Recommended properties:
 | `Order` | Number | Manual sort order |
 | `Slug` | Text / Formula | Optional stable section id |
 
+`Parent item` is the default parent relation name. When reading from Notion, the
+builder also inspects the data source schema and recognizes common localized
+Sub-items parent relation names such as `父项` and `親アイテム`. If your workspace
+uses a custom name, add it to `project.parentFields` in `notion2page.config.js`.
+
 Do not add `Description` or `Cover URL` fields for the normal flow:
 
 - Description comes from the page content blocks.

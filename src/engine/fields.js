@@ -2,6 +2,10 @@ export function collectReferencedProperties(config) {
   const properties = new Set();
   const add = (value) => {
     if (!value) return;
+    if (Array.isArray(value)) {
+      for (const entry of value) add(entry);
+      return;
+    }
     if (typeof value === "string") {
       properties.add(value);
       return;
@@ -22,6 +26,7 @@ export function collectReferencedProperties(config) {
 
   const projectFields = config.project?.fields ?? {};
   for (const value of Object.values(projectFields)) add(value);
+  for (const value of listFrom(config.project?.parentFields)) add(value);
 
   return properties;
 }
@@ -42,7 +47,7 @@ export function getProperty(item, descriptor) {
     if (descriptor === "$lastEditedTime") {
       return textLikeValue(item.lastEditedTime);
     }
-    return item.properties[descriptor];
+    return findProperty(item, descriptor);
   }
 
   if (typeof descriptor === "object") {
@@ -50,6 +55,32 @@ export function getProperty(item, descriptor) {
   }
 
   return undefined;
+}
+
+function findProperty(item, descriptor) {
+  const direct = item.properties?.[descriptor];
+  if (direct) return direct;
+
+  return Object.values(item.properties ?? {}).find((property) => (
+    property?.id && samePropertyId(property.id, descriptor)
+  ));
+}
+
+function listFrom(value) {
+  if (!value) return [];
+  return Array.isArray(value) ? value : [value];
+}
+
+function samePropertyId(left, right) {
+  return left === right || decodePropertyId(left) === decodePropertyId(right);
+}
+
+function decodePropertyId(value) {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
 }
 
 export function propertyText(item, descriptor, fallback = "") {

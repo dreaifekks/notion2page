@@ -2,7 +2,7 @@ export function normalizeNotionPage(page) {
   const properties = {};
 
   for (const [name, value] of Object.entries(page.properties ?? {})) {
-    properties[name] = normalizeNotionProperty(value);
+    properties[name] = withNotionPropertyMeta(normalizeNotionProperty(value), name, value);
   }
 
   return {
@@ -36,6 +36,12 @@ export function normalizePlainRecord(row, index) {
     properties,
     raw: row
   };
+}
+
+function withNotionPropertyMeta(normalized, name, raw) {
+  if (raw?.id) normalized.id = raw.id;
+  normalized.name = name;
+  return normalized;
 }
 
 function normalizeNotionProperty(property) {

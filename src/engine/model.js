@@ -18,19 +18,41 @@ const DEFAULT_FIELDS = {
   order: "Order",
   slug: "Slug"
 };
+const DEFAULT_PARENT_FIELD_CANDIDATES = [
+  "Parent item",
+  "Parent",
+  "Parent project",
+  "Parent task",
+  "父项",
+  "父項",
+  "父项目",
+  "父專案",
+  "父级项目",
+  "上级项目",
+  "上級項目",
+  "親アイテム",
+  "親項目",
+  "親プロジェクト",
+  "親タスク"
+];
 
 export function buildPageModel(config, items, sourceMeta = {}) {
   const fields = {
     ...DEFAULT_FIELDS,
     ...(config.project?.fields ?? {})
   };
+  const parentDescriptors = parentFieldDescriptors(config, fields, sourceMeta);
 
   const projects = items
     .filter((item) => propertyBoolean(item, fields.published, true))
-    .map((item) => buildProject(item, fields))
+    .map((item) => buildProject(item, fields, parentDescriptors))
     .filter((project) => project.name);
 
-  const projectMap = new Map(projects.map((project) => [project.id, project]));
+  const projectMap = new Map();
+  for (const project of projects) {
+    projectMap.set(project.id, project);
+    projectMap.set(normalizeReferenceId(project.id), project);
+  }
   const roots = [];
 
   for (const project of projects) {
@@ -43,7 +65,7 @@ export function buildPageModel(config, items, sourceMeta = {}) {
       throw new Error(`Project "${project.name}" has multiple parents. Only one parent is supported.`);
     }
 
-    const parent = projectMap.get(project.parentIds[0]);
+    const parent = projectMap.get(project.parentIds[0]) ?? projectMap.get(normalizeReferenceId(project.parentIds[0]));
     if (!parent) {
       throw new Error(`Project "${project.name}" points to a missing or unpublished parent.`);
     }
@@ -88,7 +110,7 @@ export function buildPageModel(config, items, sourceMeta = {}) {
   };
 }
 
-function buildProject(item, fields) {
+function buildProject(item, fields, parentDescriptors) {
   const name = propertyText(item, fields.title, item.id);
   const explicitSlug = propertyText(item, fields.slug);
 
@@ -96,7 +118,7 @@ function buildProject(item, fields) {
     id: item.id,
     slug: explicitSlug || slugify(name || item.id),
     name,
-    parentIds: relationIds(item, fields.parent),
+    parentIds: relationIdsFromDescriptors(item, parentDescriptors),
     repoUrl: propertyText(item, fields.repoUrl),
     deployUrl: propertyText(item, fields.deployUrl),
     timeline: propertyText(item, fields.timeline),
@@ -111,6 +133,45 @@ function buildProject(item, fields) {
     children: [],
     properties: sanitizeProperties(item.properties)
   };
+}
+
+function parentFieldDescriptors(config, fields, sourceMeta) {
+  return uniqueDescriptors([
+    ...listFrom(fields.parent),
+    ...listFrom(sourceMeta.parentProperty?.name),
+    ...listFrom(sourceMeta.parentProperty?.id),
+    ...listFrom(sourceMeta.parentPropertyName),
+    ...listFrom(config.project?.parentFields),
+    ...DEFAULT_PARENT_FIELD_CANDIDATES
+  ]);
+}
+
+function relationIdsFromDescriptors(item, descriptors) {
+  for (const descriptor of descriptors) {
+    const ids = relationIds(item, descriptor);
+    if (ids.length > 0) return ids;
+  }
+  return [];
+}
+
+function uniqueDescriptors(descriptors) {
+  const seen = new Set();
+  const result = [];
+
+  for (const descriptor of descriptors) {
+    if (!descriptor) continue;
+    const key = typeof descriptor === "string" ? descriptor : JSON.stringify(descriptor);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    result.push(descriptor);
+  }
+
+  return result;
+}
+
+function listFrom(value) {
+  if (!value) return [];
+  return Array.isArray(value) ? value : [value];
 }
 
 function sortProjects(projects) {
@@ -151,6 +212,10 @@ function hashString(value) {
     hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
   }
   return hash;
+}
+
+function normalizeReferenceId(value) {
+  return String(value ?? "").replaceAll("-", "").toLowerCase();
 }
 
 function initials(value) {
