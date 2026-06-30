@@ -1,0 +1,18 @@
+{
+  "name": "notion2page",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Generate static two-level project portfolio pages from Notion data sources.",
+  "bin": {
+    "notion2page": "./src/cli.js"
+  },
+  "scripts": {
+    "build": "node src/cli.js build",
+    "build:demo": "node src/cli.js build --config examples/demo.config.js --out dist",
+    "serve": "node src/serve.js dist"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

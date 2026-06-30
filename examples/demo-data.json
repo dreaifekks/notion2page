@@ -1,0 +1,85 @@
+[
+  {
+    "id": "project-atlas",
+    "Name": "Atlas Knowledge Hub",
+    "Slug": "atlas-knowledge-hub",
+    "Repo URL": "https://github.com/example/atlas-knowledge-hub",
+    "Deploy URL": "https://atlas.example.com",
+    "Timeline": "2026-03-01 - 2026-06-18",
+    "Tags": ["Knowledge Base", "Search", "Cloudflare"],
+    "Published": true,
+    "Order": 1,
+    "icon": "A",
+    "cover": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=80",
+    "content": [
+      "Atlas is an English-first project hub that turns structured Notion pages into a polished static site.",
+      {
+        "type": "bulleted_list_item",
+        "text": "The top-level project owns the visual identity, timeline, tags and public links."
+      }
+    ]
+  },
+  {
+    "id": "atlas-notion-sync",
+    "Name": "Notion Sync",
+    "Parent item": "project-atlas",
+    "Repo URL": "https://github.com/example/atlas-notion-sync",
+    "Deploy URL": "https://sync.atlas.example.com",
+    "Timeline": "2026-03",
+    "Published": true,
+    "Order": 1,
+    "content": "Reads Notion data sources, page covers, icons and first-level page content blocks."
+  },
+  {
+    "id": "atlas-static-renderer",
+    "Name": "Static Renderer",
+    "Parent item": "project-atlas",
+    "Repo URL": "https://github.com/example/atlas-static-renderer",
+    "Deploy URL": "https://atlas.example.com",
+    "Timeline": "2026-04 - 2026-06",
+    "Published": true,
+    "Order": 2,
+    "icon": "SR",
+    "content": "Builds the two-column project page and compact inline subproject list."
+  },
+  {
+    "id": "project-beacon",
+    "Name": "Beacon Deploy Console",
+    "Slug": "beacon-deploy-console",
+    "Repo URL": "https://github.com/example/beacon-console",
+    "Deploy URL": "https://beacon.example.com",
+    "Timeline": "2026-01-12 - 2026-05-20",
+    "Tags": ["Deployments", "Operations", "Dashboard"],
+    "Published": true,
+    "Order": 2,
+    "icon": "B",
+    "content": [
+      "Beacon tracks lightweight deployment surfaces and turns operational notes into a readable status page.",
+      {
+        "type": "quote",
+        "text": "The main project is the item readers scan; subprojects are supporting implementation parts."
+      }
+    ]
+  },
+  {
+    "id": "beacon-release-feed",
+    "Name": "Release Feed",
+    "Parent item": "project-beacon",
+    "Repo URL": "https://github.com/example/beacon-release-feed",
+    "Deploy URL": "https://feed.beacon.example.com",
+    "Timeline": "2026-02",
+    "Published": true,
+    "Order": 1,
+    "content": "Publishes a static feed of recent deployment events."
+  },
+  {
+    "id": "beacon-health-checks",
+    "Name": "Health Checks",
+    "Parent item": "project-beacon",
+    "Repo URL": "https://github.com/example/beacon-health-checks",
+    "Timeline": "2026-04",
+    "Published": true,
+    "Order": 2,
+    "content": "Collects small endpoint checks and exposes them in the main project view."
+  }
+]
