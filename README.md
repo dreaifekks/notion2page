@@ -79,6 +79,8 @@ export NOTION_DATA_SOURCE_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 
 When a database ID is provided, `notion2page` automatically retrieves the database and uses its data source. If the database has multiple data sources, set `source.dataSourceName` in `notion2page.config.js`.
 
+By default, the Notion query fetches all page properties. `source.filterProperties` is intentionally opt-in because Notion expects property identifiers there, and some automatic fields such as Sub-items can fail when filtered by their visible names.
+
 4. Build:
 
 ```bash

@@ -8,7 +8,7 @@ export async function readNotionSource(config) {
   const sourceId = source.dataSourceId ?? source.databaseId;
   const notionVersion = source.notionVersion ?? "2026-03-11";
   const pageSize = Math.min(Math.max(source.pageSize ?? 100, 1), 100);
-  const filterProperties = source.filterProperties ?? [...config.__referencedProperties];
+  const filterProperties = source.filterProperties ?? [];
   const propertiesQuery = buildFilterPropertiesQuery(filterProperties);
 
   const resolved = await resolveDataSource({
