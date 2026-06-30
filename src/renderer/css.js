@@ -88,8 +88,8 @@ h1 {
   top: 0;
   right: 0;
   z-index: 50;
-  width: 104px;
-  height: 104px;
+  width: 112px;
+  height: 112px;
   clip-path: polygon(100% 0, 0 0, 100% 100%);
   background: var(--accent);
   color: #f8faf9;
@@ -102,15 +102,16 @@ h1 {
 
 .github-corner span {
   position: absolute;
-  top: 21px;
-  right: 6px;
-  width: 84px;
+  top: 27px;
+  right: -18px;
+  width: 136px;
   display: block;
   transform: rotate(45deg);
   text-align: center;
-  font-size: 0.72rem;
+  font-size: 0.98rem;
   font-weight: 820;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .site-stats {
@@ -524,15 +525,16 @@ h1 {
   }
 
   .github-corner {
-    width: 78px;
-    height: 78px;
+    width: 86px;
+    height: 86px;
   }
 
   .github-corner span {
-    top: 15px;
-    right: -2px;
-    width: 70px;
-    font-size: 0.62rem;
+    top: 20px;
+    right: -16px;
+    width: 110px;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
   }
 
   .project-cover {
