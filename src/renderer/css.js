@@ -83,36 +83,34 @@ h1 {
   justify-items: end;
 }
 
-.github-link {
-  min-height: 40px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 6px 10px 6px 7px;
-  background: #111412;
-  color: var(--text);
-  font-size: 0.86rem;
-  font-weight: 760;
-}
-
-.github-link:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-soft);
-}
-
-.github-link__mark {
-  width: 28px;
-  height: 28px;
-  border-radius: 7px;
-  display: inline-grid;
-  place-items: center;
-  background: #050505;
+.github-corner {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 50;
+  width: 104px;
+  height: 104px;
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+  background: var(--accent);
   color: #f8faf9;
-  font-size: 0.68rem;
+  box-shadow: -10px 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+.github-corner:hover {
+  background: color-mix(in srgb, var(--accent), white 12%);
+}
+
+.github-corner span {
+  position: absolute;
+  top: 21px;
+  right: 6px;
+  width: 84px;
+  display: block;
+  transform: rotate(45deg);
+  text-align: center;
+  font-size: 0.72rem;
   font-weight: 820;
+  letter-spacing: 0.02em;
 }
 
 .site-stats {
@@ -510,10 +508,6 @@ h1 {
     justify-items: stretch;
   }
 
-  .github-link {
-    justify-content: center;
-  }
-
   .project-grid {
     columns: 1;
   }
@@ -527,6 +521,18 @@ h1 {
 
   h1 {
     font-size: 2.05rem;
+  }
+
+  .github-corner {
+    width: 78px;
+    height: 78px;
+  }
+
+  .github-corner span {
+    top: 15px;
+    right: -2px;
+    width: 70px;
+    font-size: 0.62rem;
   }
 
   .project-cover {

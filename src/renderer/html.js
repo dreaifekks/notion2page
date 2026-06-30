@@ -18,6 +18,9 @@ export function renderHtml(model, config) {
   <link rel="stylesheet" href="./style.css?v=${styleVersion}">
 </head>
 <body>
+  <a class="github-corner" href="${escapeAttribute(githubUrl)}" target="_blank" rel="noreferrer" aria-label="Open ${escapeAttribute(githubLabel)} on GitHub" title="${escapeAttribute(githubLabel)} on GitHub">
+    <span aria-hidden="true">GitHub</span>
+  </a>
   <header class="site-header">
     <div class="site-header__inner">
       <div>
@@ -26,10 +29,6 @@ export function renderHtml(model, config) {
         ${model.description ? `<p class="site-description">${escapeHtml(model.description)}</p>` : ""}
       </div>
       <div class="site-actions">
-        <a class="github-link" href="${escapeAttribute(githubUrl)}" target="_blank" rel="noreferrer" aria-label="Open ${escapeAttribute(githubLabel)} on GitHub">
-          <span class="github-link__mark" aria-hidden="true">GH</span>
-          <span>${escapeHtml(githubLabel)}</span>
-        </a>
         <div class="site-stats" aria-label="Page stats">
           <div>
             <span>${model.stats.projects}</span>
