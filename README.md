@@ -72,6 +72,13 @@ export NOTION_TOKEN=secret_xxx
 export NOTION_DATA_SOURCE_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
+`NOTION_DATA_SOURCE_ID` may be either:
+
+- The database ID from the Notion URL.
+- The resolved data source ID returned by the Notion API.
+
+When a database ID is provided, `notion2page` automatically retrieves the database and uses its data source. If the database has multiple data sources, set `source.dataSourceName` in `notion2page.config.js`.
+
 4. Build:
 
 ```bash

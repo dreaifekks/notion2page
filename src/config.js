@@ -39,8 +39,8 @@ function validateConfig(config) {
     if (!config.source.token) {
       throw new Error("Notion source requires source.token or NOTION_TOKEN.");
     }
-    if (!config.source.dataSourceId) {
-      throw new Error("Notion source requires source.dataSourceId or NOTION_DATA_SOURCE_ID.");
+    if (!config.source.dataSourceId && !config.source.databaseId) {
+      throw new Error("Notion source requires source.dataSourceId/source.databaseId or NOTION_DATA_SOURCE_ID/NOTION_DATABASE_ID.");
     }
   }
 

@@ -82,6 +82,6 @@ Usage:
 
 Examples:
   npm run build:demo
-  NOTION_TOKEN=secret_xxx NOTION_DATA_SOURCE_ID=xxx npm run build
+  NOTION_TOKEN=secret_xxx NOTION_DATA_SOURCE_ID=database-or-data-source-id npm run build
 `);
 }

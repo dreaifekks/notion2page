@@ -5,7 +5,7 @@ export default {
   source: {
     type: "notion",
     token: process.env.NOTION_TOKEN,
-    dataSourceId: process.env.NOTION_DATA_SOURCE_ID,
+    dataSourceId: process.env.NOTION_DATA_SOURCE_ID ?? process.env.NOTION_DATABASE_ID,
     notionVersion: "2026-03-11",
     pageSize: 100,
     includePageContent: true,

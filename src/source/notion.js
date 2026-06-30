@@ -5,18 +5,20 @@ const API_BASE = "https://api.notion.com/v1";
 
 export async function readNotionSource(config) {
   const source = config.source;
-  const dataSourceId = source.dataSourceId;
+  const sourceId = source.dataSourceId ?? source.databaseId;
   const notionVersion = source.notionVersion ?? "2026-03-11";
   const pageSize = Math.min(Math.max(source.pageSize ?? 100, 1), 100);
   const filterProperties = source.filterProperties ?? [...config.__referencedProperties];
   const propertiesQuery = buildFilterPropertiesQuery(filterProperties);
 
-  const dataSource = await requestJson({
-    path: `/data_sources/${dataSourceId}`,
-    method: "GET",
+  const resolved = await resolveDataSource({
+    sourceId,
+    preferredDataSourceName: source.dataSourceName,
     token: source.token,
     notionVersion
   });
+  const dataSource = resolved.dataSource;
+  const dataSourceId = dataSource.id;
 
   const results = [];
   let startCursor = undefined;
@@ -59,10 +61,60 @@ export async function readNotionSource(config) {
     items,
     meta: {
       sourceType: "notion",
+      inputSourceId: sourceId,
       dataSourceId,
+      databaseId: resolved.database?.id,
       dataSourceName: dataSource.title?.map((part) => part.plain_text).join("") ?? undefined,
       totalFetched: results.length
     }
+  };
+}
+
+async function resolveDataSource({ sourceId, preferredDataSourceName, token, notionVersion }) {
+  const dataSource = await requestJson({
+    path: `/data_sources/${sourceId}`,
+    method: "GET",
+    token,
+    notionVersion,
+    allowNotFound: true
+  });
+
+  if (dataSource) {
+    return { dataSource };
+  }
+
+  const database = await requestJson({
+    path: `/databases/${sourceId}`,
+    method: "GET",
+    token,
+    notionVersion
+  });
+
+  const dataSources = database.data_sources ?? [];
+
+  if (dataSources.length === 0) {
+    throw new Error(`Database "${sourceId}" has no data sources.`);
+  }
+
+  const picked = preferredDataSourceName
+    ? dataSources.find((entry) => entry.name === preferredDataSourceName)
+    : dataSources.length === 1 ? dataSources[0] : undefined;
+
+  if (!picked) {
+    const names = dataSources.map((entry) => `${entry.name} (${entry.id})`).join(", ");
+    throw new Error(`Database "${sourceId}" has multiple data sources. Set source.dataSourceName to one of: ${names}`);
+  }
+
+  const resolvedDataSource = await requestJson({
+    path: `/data_sources/${picked.id}`,
+    method: "GET",
+    token,
+    notionVersion
+  });
+
+  return {
+    database,
+    dataSource: resolvedDataSource
   };
 }
 
@@ -89,7 +141,7 @@ async function readPageContent({ pageId, token, notionVersion, pageSize }) {
   return normalizeNotionBlocks(results);
 }
 
-async function requestJson({ path, method, token, notionVersion, body }) {
+async function requestJson({ path, method, token, notionVersion, body, allowNotFound = false }) {
   const response = await fetch(`${API_BASE}${path}`, {
     method,
     headers: {
@@ -104,6 +156,10 @@ async function requestJson({ path, method, token, notionVersion, body }) {
   const payload = text ? JSON.parse(text) : {};
 
   if (!response.ok) {
+    if (allowNotFound && response.status === 404) {
+      return undefined;
+    }
+
     const message = payload.message ? `: ${payload.message}` : "";
     throw new Error(`Notion API ${response.status} ${response.statusText}${message}`);
   }
