@@ -1,9 +1,11 @@
-import { access } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { collectReferencedProperties } from "./engine/fields.js";
 
 export async function loadConfig(configPath) {
+  await loadDotEnv(path.resolve(process.cwd(), ".env"));
+
   const absolutePath = path.resolve(process.cwd(), configPath);
 
   try {
@@ -24,6 +26,50 @@ export async function loadConfig(configPath) {
   config.__configPath = absolutePath;
   config.__referencedProperties = collectReferencedProperties(config);
   return config;
+}
+
+async function loadDotEnv(filePath) {
+  let text;
+  try {
+    text = await readFile(filePath, "utf8");
+  } catch (error) {
+    if (error.code === "ENOENT") return;
+    throw error;
+  }
+
+  for (const line of text.split(/\r?\n/)) {
+    const entry = parseEnvLine(line);
+    if (!entry) continue;
+
+    const [key, value] = entry;
+    if (process.env[key] === undefined) {
+      process.env[key] = value;
+    }
+  }
+}
+
+function parseEnvLine(line) {
+  const trimmed = line.trim();
+  if (!trimmed || trimmed.startsWith("#")) return undefined;
+
+  const separator = trimmed.indexOf("=");
+  if (separator <= 0) return undefined;
+
+  const key = trimmed.slice(0, separator).trim();
+  const value = unquoteEnvValue(trimmed.slice(separator + 1).trim());
+  if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(key)) return undefined;
+
+  return [key, value];
+}
+
+function unquoteEnvValue(value) {
+  if (
+    (value.startsWith('"') && value.endsWith('"')) ||
+    (value.startsWith("'") && value.endsWith("'"))
+  ) {
+    return value.slice(1, -1);
+  }
+  return value;
 }
 
 function validateConfig(config) {

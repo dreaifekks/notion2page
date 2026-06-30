@@ -47,6 +47,7 @@ export function buildPageModel(config, items, sourceMeta = {}) {
     .filter((item) => propertyBoolean(item, fields.published, true))
     .map((item) => buildProject(item, fields, parentDescriptors))
     .filter((project) => project.name);
+  const inferredParentProperty = applyInferredParentRelation(projects);
 
   const projectMap = new Map();
   for (const project of projects) {
@@ -100,7 +101,9 @@ export function buildPageModel(config, items, sourceMeta = {}) {
     title: config.title ?? "Notion2Page",
     description: config.description ?? "",
     generatedAt: new Date().toISOString(),
-    source: sourceMeta,
+    source: inferredParentProperty
+      ? { ...sourceMeta, inferredParentProperty }
+      : sourceMeta,
     stats: {
       projects: sortedRoots.length,
       subprojects: subprojectCount
@@ -152,6 +155,75 @@ function relationIdsFromDescriptors(item, descriptors) {
     if (ids.length > 0) return ids;
   }
   return [];
+}
+
+function applyInferredParentRelation(projects) {
+  if (projects.some((project) => project.parentIds.length > 0)) {
+    return undefined;
+  }
+
+  const projectIds = new Set(projects.flatMap((project) => [
+    project.id,
+    normalizeReferenceId(project.id)
+  ]));
+  const candidates = new Map();
+
+  for (const project of projects) {
+    for (const [propertyName, property] of Object.entries(project.properties ?? {})) {
+      if (property?.type !== "relation") continue;
+
+      const ids = relationPropertyIds(property)
+        .filter((id) => projectIds.has(id) || projectIds.has(normalizeReferenceId(id)));
+      if (ids.length === 0) continue;
+
+      const key = property.id ?? propertyName;
+      const candidate = candidates.get(key) ?? {
+        id: property.id,
+        name: property.name ?? propertyName,
+        rows: [],
+        totalRefs: 0,
+        singleRefRows: 0,
+        maxRefs: 0
+      };
+
+      candidate.rows.push({ project, ids });
+      candidate.totalRefs += ids.length;
+      candidate.maxRefs = Math.max(candidate.maxRefs, ids.length);
+      if (ids.length === 1) candidate.singleRefRows += 1;
+      candidates.set(key, candidate);
+    }
+  }
+
+  const winner = [...candidates.values()]
+    .filter((candidate) => candidate.rows.length > 0)
+    .sort((left, right) => parentCandidateScore(right) - parentCandidateScore(left))[0];
+  if (!winner) return undefined;
+
+  for (const row of winner.rows) {
+    row.project.parentIds = row.ids;
+  }
+
+  return {
+    id: winner.id,
+    name: winner.name,
+    reason: "relation_values"
+  };
+}
+
+function relationPropertyIds(property) {
+  if (!Array.isArray(property.values)) return [];
+  return property.values
+    .map((entry) => typeof entry === "string" ? entry : entry?.id ?? entry?.value ?? entry?.text)
+    .filter(Boolean);
+}
+
+function parentCandidateScore(candidate) {
+  return (
+    candidate.singleRefRows * 1000 +
+    candidate.rows.length * 100 -
+    candidate.totalRefs * 2 -
+    candidate.maxRefs
+  );
 }
 
 function uniqueDescriptors(descriptors) {

@@ -77,6 +77,9 @@ export NOTION_TOKEN=secret_xxx
 export NOTION_DATA_SOURCE_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
+You can also put those values in a local `.env` file. `.env` is ignored by git
+and loaded automatically before `notion2page.config.js` is imported.
+
 `NOTION_DATA_SOURCE_ID` may be either:
 
 - The database ID from the Notion URL.
