@@ -77,6 +77,44 @@ h1 {
   line-height: 1.6;
 }
 
+.site-actions {
+  display: grid;
+  gap: 10px;
+  justify-items: end;
+}
+
+.github-link {
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 10px 6px 7px;
+  background: #111412;
+  color: var(--text);
+  font-size: 0.86rem;
+  font-weight: 760;
+}
+
+.github-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.github-link__mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  display: inline-grid;
+  place-items: center;
+  background: #050505;
+  color: #f8faf9;
+  font-size: 0.68rem;
+  font-weight: 820;
+}
+
 .site-stats {
   min-width: 118px;
   min-height: 86px;
@@ -466,6 +504,14 @@ h1 {
 
   .site-stats {
     width: 100%;
+  }
+
+  .site-actions {
+    justify-items: stretch;
+  }
+
+  .github-link {
+    justify-content: center;
   }
 
   .project-grid {

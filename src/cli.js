@@ -7,6 +7,7 @@ import { readSource } from "./source/index.js";
 import { buildPageModel } from "./engine/model.js";
 import { renderHtml } from "./renderer/html.js";
 import { renderCss } from "./renderer/css.js";
+import { renderFavicon } from "./renderer/favicon.js";
 
 const args = process.argv.slice(2);
 
@@ -41,6 +42,7 @@ async function main() {
   await mkdir(outDir, { recursive: true });
   await writeFile(path.join(outDir, "index.html"), renderHtml(model, config), "utf8");
   await writeFile(path.join(outDir, "style.css"), renderCss(config), "utf8");
+  await writeFile(path.join(outDir, "favicon.svg"), renderFavicon(config), "utf8");
   await writeFile(path.join(outDir, "data.json"), JSON.stringify(model, null, 2), "utf8");
 
   console.log(`Built ${model.stats.projects} projects and ${model.stats.subprojects} subprojects into ${outDir}`);

@@ -2,6 +2,8 @@ import { escapeHtml, escapeAttribute } from "./utils.js";
 
 export function renderHtml(model, config) {
   const styleVersion = encodeURIComponent(model.generatedAt);
+  const githubUrl = config.githubUrl ?? "https://github.com/dreaifekks";
+  const githubLabel = config.githubLabel ?? "dreaifekks";
 
   return `<!doctype html>
 <html lang="${escapeAttribute(config.lang ?? "en")}">
@@ -11,6 +13,8 @@ export function renderHtml(model, config) {
   <meta name="color-scheme" content="dark">
   <title>${escapeHtml(model.title)}</title>
   <meta name="description" content="${escapeAttribute(model.description)}">
+  <meta name="theme-color" content="#050505">
+  <link rel="icon" href="./favicon.svg?v=${styleVersion}" type="image/svg+xml">
   <link rel="stylesheet" href="./style.css?v=${styleVersion}">
 </head>
 <body>
@@ -21,10 +25,16 @@ export function renderHtml(model, config) {
         <h1>${escapeHtml(model.title)}</h1>
         ${model.description ? `<p class="site-description">${escapeHtml(model.description)}</p>` : ""}
       </div>
-      <div class="site-stats" aria-label="Page stats">
-        <div>
-          <span>${model.stats.projects}</span>
-          <small>projects</small>
+      <div class="site-actions">
+        <a class="github-link" href="${escapeAttribute(githubUrl)}" target="_blank" rel="noreferrer" aria-label="Open ${escapeAttribute(githubLabel)} on GitHub">
+          <span class="github-link__mark" aria-hidden="true">GH</span>
+          <span>${escapeHtml(githubLabel)}</span>
+        </a>
+        <div class="site-stats" aria-label="Page stats">
+          <div>
+            <span>${model.stats.projects}</span>
+            <small>projects</small>
+          </div>
         </div>
       </div>
     </div>
