@@ -155,21 +155,20 @@ h1 {
 }
 
 .project-grid {
-  columns: 2 360px;
-  column-gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
 }
 
 .project {
   min-width: 0;
   width: 100%;
-  display: inline-block;
-  margin: 0 0 20px;
   border: 1px solid var(--line);
   border-radius: 8px;
   overflow: hidden;
   background: var(--surface);
   box-shadow: var(--shadow);
-  break-inside: avoid;
 }
 
 .project-cover {
@@ -510,7 +509,7 @@ h1 {
   }
 
   .project-grid {
-    columns: 1;
+    grid-template-columns: 1fr;
   }
 }
 
