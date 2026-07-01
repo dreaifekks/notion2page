@@ -122,6 +122,38 @@ The build writes:
 
 `data.json` is the generated page model for debugging.
 
-## Asset Note
+## Cloudflare Pages + R2 Assets
 
-Notion-hosted file URLs are temporary. For production on Cloudflare Pages, page cover/icon files should be mirrored to R2 during build or replaced with stable external URLs. The current version reads the URLs and renders the static site; R2 mirroring is the next implementation step.
+Notion-hosted file URLs are temporary signed S3 URLs. For production on
+Cloudflare Pages, mirror those files to R2 during the Pages build and render the
+static page with stable R2 URLs.
+
+1. Create an R2 bucket for portfolio assets.
+2. Expose the bucket through an R2 public URL or a custom domain.
+3. Create an R2 S3 API token with object read/write access for that bucket.
+4. Add these environment variables to the Cloudflare Pages project:
+
+```bash
+ASSET_MIRROR_PROVIDER=r2
+R2_ACCOUNT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+R2_BUCKET=notion2page-assets
+R2_ACCESS_KEY_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+R2_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+R2_PUBLIC_URL=https://assets.example.com
+R2_PREFIX=notion2page
+```
+
+Keep the build command as:
+
+```bash
+npm run build
+```
+
+When enabled, the builder downloads Notion-hosted cover, icon and content image
+URLs, uploads them to R2 with content-hashed object keys, and rewrites
+`dist/index.html` and `dist/data.json` to use `R2_PUBLIC_URL`.
+
+By default only Notion-hosted temporary file URLs are mirrored. Set
+`R2_MIRROR_EXTERNAL=true` if you also want to mirror stable external image URLs.
+The R2 S3 upload endpoint defaults to virtual-hosted style; set
+`R2_URL_STYLE=path` only if you need path-style uploads for your environment.

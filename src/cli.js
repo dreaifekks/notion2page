@@ -5,6 +5,7 @@ import path from "node:path";
 import { loadConfig } from "./config.js";
 import { readSource } from "./source/index.js";
 import { buildPageModel } from "./engine/model.js";
+import { mirrorAssets } from "./assets/index.js";
 import { renderHtml } from "./renderer/html.js";
 import { renderCss } from "./renderer/css.js";
 import { renderFavicon } from "./renderer/favicon.js";
@@ -38,14 +39,18 @@ async function main() {
   const config = await loadConfig(configPath);
   const sourceResult = await readSource(config);
   const model = buildPageModel(config, sourceResult.items, sourceResult.meta);
+  const mirrorResult = await mirrorAssets(model, config);
 
   await mkdir(outDir, { recursive: true });
-  await writeFile(path.join(outDir, "index.html"), renderHtml(model, config), "utf8");
+  await writeFile(path.join(outDir, "index.html"), renderHtml(mirrorResult.model, config), "utf8");
   await writeFile(path.join(outDir, "style.css"), renderCss(config), "utf8");
   await writeFile(path.join(outDir, "favicon.svg"), renderFavicon(config), "utf8");
-  await writeFile(path.join(outDir, "data.json"), JSON.stringify(model, null, 2), "utf8");
+  await writeFile(path.join(outDir, "data.json"), JSON.stringify(mirrorResult.model, null, 2), "utf8");
 
-  console.log(`Built ${model.stats.projects} projects and ${model.stats.subprojects} subprojects into ${outDir}`);
+  if (mirrorResult.stats.mirrored > 0) {
+    console.log(`Mirrored ${mirrorResult.stats.mirrored} asset references to R2 (${mirrorResult.stats.uploaded} uploaded).`);
+  }
+  console.log(`Built ${mirrorResult.model.stats.projects} projects and ${mirrorResult.model.stats.subprojects} subprojects into ${outDir}`);
   console.log(`Open ${path.join(outDir, "index.html")}`);
 }
 
